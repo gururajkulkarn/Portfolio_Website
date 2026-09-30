@@ -71,16 +71,28 @@ export const defaultExperience = [
 ];
 export const defaultTestimonials = [
   {
-    name: "Project Client",
-    role: "Web Application",
+    name: "Web development client",
+    role: "Client feedback",
     quote:
-      "The project brought the frontend and backend together into a clean, practical solution that was easy for our team to use.",
+      "Clients value clear communication, a professional working relationship, and support from the first discussion through final delivery.",
   },
   {
-    name: "Project Client",
-    role: "Web Project",
+    name: "End-to-end project client",
+    role: "Website development",
     quote:
-      "Clear communication, practical execution and strong attention to the deployment details.",
+      "A collaborative process with regular updates and steady support through planning, development, and launch.",
+  },
+  {
+    name: "Academic project student",
+    role: "College project",
+    quote:
+      "Students appreciate clear guidance, patient explanations, and successful completion of their academic projects.",
+  },
+  {
+    name: "Student project feedback",
+    role: "Academic project support",
+    quote:
+      "Complex requirements are broken into manageable steps, with help available from the first idea through final presentation.",
   },
 ];
 export const defaultAbout = {
@@ -115,11 +127,12 @@ export const defaultSettings = {
   experienceTitle: "A practical, hands-on journey.",
   testimonialsEyebrow: "TESTIMONIALS",
   testimonialsTitle: "What people say.",
+  testimonialsDescription: "Feedback from clients and students on communication, collaboration, and end-to-end project support.",
   contactEyebrow: "LET'S BUILD SOMETHING",
-  contactTitle: "Have a project or idea?",
+  contactTitle: "Have a project, training requirement, or idea you’d like to discuss?",
   contactDescription: "Let's turn it into something useful, beautiful and real.",
   contactCta: "Email me",
-  footerText: "Built with React + Firebase + Tailwind CSS.",
+  footerText: "Built with React + Tailwind CSS + Firebase.",
   navigation: {
     home: "Home",
     about: "About",

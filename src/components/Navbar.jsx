@@ -1,9 +1,12 @@
-import { Link } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, Moon, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 export default function Navbar({ profile, settings }) {
   const [open, setOpen] = useState(false),
     [scrolled, setScrolled] = useState(false),
+    [lightMode, setLightMode] = useState(() => {
+      try { return window.localStorage.getItem("portfolio-theme") === "light"; }
+      catch { return false; }
+    }),
     [activeSection, setActiveSection] = useState("home");
   const items = [
     ["Home", "home"],
@@ -15,6 +18,13 @@ export default function Navbar({ profile, settings }) {
   ];
   const displayName = profile?.name || "Gururaj Kulkarni";
   const brandMark = displayName.trim().split(/\s+/).map((part) => part[0]).join("").slice(0, 2).toUpperCase() || "GK";
+  const toggleTheme = () => setLightMode((current) => !current);
+
+  useEffect(() => {
+    document.documentElement.dataset.theme = lightMode ? "light" : "dark";
+    try { window.localStorage.setItem("portfolio-theme", lightMode ? "light" : "dark"); }
+    catch {}
+  }, [lightMode]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,24 +74,27 @@ export default function Navbar({ profile, settings }) {
               {settings?.navigation?.[id] || label}
             </a>
           ))}
-          <Link
-            to="/admin"
-            className="nav-admin ml-3 px-5 py-3 rounded-xl bg-white text-slate-950 font-bold shadow-lg hover:-translate-y-0.5"
-          >
-            Admin
-          </Link>
+          <button type="button" onClick={toggleTheme} className="theme-toggle ml-3" aria-label={`Switch to ${lightMode ? "dark" : "light"} mode`} title={`Switch to ${lightMode ? "dark" : "light"} mode`}>
+            {lightMode ? <Moon size={18} /> : <Sun size={18} />}
+            <span>{lightMode ? "Dark" : "Light"}</span>
+          </button>
         </div>
-        <button
-          onClick={() => setOpen(!open)}
-          aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-          aria-expanded={open}
-          className="md:hidden p-2.5 rounded-xl bg-white/5 border border-white/10 text-slate-100 hover:bg-white/10"
-        >
-          {open ? <X /> : <Menu />}
-        </button>
+        <div className="mobile-nav-actions flex md:hidden">
+          <button type="button" onClick={toggleTheme} className="theme-toggle theme-toggle-mobile" aria-label={`Switch to ${lightMode ? "dark" : "light"} mode`} title={`Switch to ${lightMode ? "dark" : "light"} mode`}>
+            {lightMode ? <Moon size={18} /> : <Sun size={18} />}
+          </button>
+          <button
+            onClick={() => setOpen(!open)}
+            aria-label={open ? "Close navigation menu" : "Open navigation menu"}
+            aria-expanded={open}
+            className="mobile-menu-toggle"
+          >
+            {open ? <X /> : <Menu />}
+          </button>
+        </div>
       </nav>
       {open && (
-        <div className="md:hidden px-6 pb-6 pt-3 space-y-1 bg-[#080c1c]/95 backdrop-blur-2xl border-t border-white/10 shadow-xl">
+        <div className="mobile-nav-menu md:hidden px-6 pb-6 pt-3 space-y-1 bg-[#080c1c]/95 backdrop-blur-2xl border-t border-white/10 shadow-xl">
           {items.map(([label, id]) => (
             <a
               onClick={() => setOpen(false)}
@@ -93,7 +106,6 @@ export default function Navbar({ profile, settings }) {
               {settings?.navigation?.[id] || label}
             </a>
           ))}
-        
         </div>
       )}
     </header>

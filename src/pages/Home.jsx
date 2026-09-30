@@ -6,6 +6,9 @@ import {
   Boxes,
   Database,
   Globe2,
+  ArrowRight,
+  Mail,
+  MessageCircle,
   PanelsTopLeft,
   Rocket,
   Smartphone,
@@ -20,6 +23,8 @@ import Hero from "../components/Hero";
 import Stats from "../components/Stats";
 import ProjectSlider from "../components/ProjectSlider";
 import SectionTitle from "../components/SectionTitle";
+import TestimonialsCarousel from "../components/TestimonialsCarousel";
+import InteractiveSkillsGraph from "../components/InteractiveSkillsGraph";
 import {
   defaultProfile,
   defaultAbout,
@@ -59,6 +64,9 @@ export default function Home() {
     [testimonials, setTestimonials] = useState(defaultTestimonials);
   const skills = profile.skills || [];
   const services = about.services || [];
+  const whatsappDigits = (profile.phone || "7353563239").replace(/\D/g, "");
+  const whatsappNumber = whatsappDigits.length === 10 ? `91${whatsappDigits}` : whatsappDigits;
+  const whatsappLink = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent("Hi Gururaj, I'd like to discuss a project.")}`;
   useEffect(() => {
     const loaderTimer = window.setTimeout(() => setIsLoading(false), 2400);
     getSingleton("profile")
@@ -81,6 +89,9 @@ export default function Home() {
         if (savedSettings) setSettings({
           ...defaultSettings,
           ...savedSettings,
+          contactTitle: !savedSettings.contactTitle || savedSettings.contactTitle === "Have a project or idea?"
+            ? defaultSettings.contactTitle
+            : savedSettings.contactTitle,
           navigation: { ...defaultSettings.navigation, ...savedSettings.navigation },
         });
       })
@@ -96,8 +107,8 @@ export default function Home() {
     };
     const unsubs = [
       get("projects", (records) => setProjects(records.length ? records : defaultProjects), defaultProjects),
-      get("experience", setExperience, defaultExperience),
-      get("testimonials", setTestimonials, defaultTestimonials),
+      get("experience", (records) => setExperience(records.length ? records : defaultExperience), defaultExperience),
+      get("testimonials", (records) => setTestimonials(records.length ? records : defaultTestimonials), defaultTestimonials),
     ];
     return () => {
       window.clearTimeout(loaderTimer);
@@ -233,67 +244,54 @@ export default function Home() {
                 <span>{settings.technologyPanelFooter}</span>
               </div>
             </motion.div>
+            <InteractiveSkillsGraph />
           </div>
         </section>
         <ProjectSlider projects={projects} settings={settings} />
-        <section id="experience" className="max-w-7xl mx-auto px-6 py-28">
+        <section id="experience" className="experience-section max-w-7xl mx-auto px-6 py-24 md:py-28">
           <SectionTitle
             eyebrow={settings.experienceEyebrow}
             title={settings.experienceTitle}
           />
-          <div className="mt-12 space-y-5">
+          <div className="experience-timeline mt-12 md:mt-14">
             {experience.map((e, i) => (
-              <motion.div
+              <motion.article
                 key={e.id || i}
-                className="glass rounded-3xl p-7 md:p-9 grid md:grid-cols-[1fr_auto] gap-5"
-                initial={{ opacity: 0, x: i % 2 === 0 ? -36 : 36 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                whileHover={{ y: -4 }}
+                className="experience-timeline-entry"
+                initial={{ opacity: 0, x: i % 2 === 0 ? -28 : 28, y: 12 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                whileHover={{ y: -5 }}
                 viewport={{ once: true, amount: 0.25 }}
                 transition={{ duration: 0.55, delay: i * 0.12, ease: "easeOut" }}
               >
-                <div>
-                  <p className="text-cyan-300 font-semibold">{e.role}</p>
-                  <h3 className="mt-2 text-2xl font-bold">{e.company}</h3>
-                  <p className="mt-4 text-slate-400 leading-7">
-                    {e.description}
-                  </p>
+                <span className="experience-timeline-marker" aria-hidden="true"><i /></span>
+                <div className="experience-card">
+                  <div className="experience-card-heading">
+                    <div className="min-w-0">
+                      <span className="experience-role-label">ROLE</span>
+                      <h3>{e.role}</h3>
+                    </div>
+                    {/(present|current|ongoing)/i.test(e.period || "") && (
+                      <span className="experience-current-badge"><i /> Current</span>
+                    )}
+                  </div>
+                  <div className="experience-company-row">
+                    <span>{e.company}</span>
+                    <span className="experience-period">{e.period}</span>
+                  </div>
+                  <p className="experience-description">{e.description}</p>
                 </div>
-                <span className="text-slate-500 text-sm">{e.period}</span>
-              </motion.div>
+              </motion.article>
             ))}
           </div>
         </section>
-        <section data-section="testimonials" className="py-28 bg-gradient-to-b from-transparent to-indigo-950/20">
-          <div className="max-w-7xl mx-auto px-6">
-            <SectionTitle eyebrow={settings.testimonialsEyebrow} title={settings.testimonialsTitle} />
-            <div className="mt-12 grid md:grid-cols-2 gap-6">
-              {testimonials.map((t, i) => (
-                <motion.div
-                  key={t.id || i}
-                  className="glass rounded-3xl p-8"
-                  initial={{ opacity: 0, x: i % 2 === 0 ? -28 : 28, y: 12 }}
-                  whileInView={{ opacity: 1, x: 0, y: 0 }}
-                  whileHover={{ y: -5 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ duration: 0.5, delay: i * 0.1, ease: "easeOut" }}
-                >
-                  <p className="text-xl leading-8 text-slate-200">
-                    “{t.quote}”
-                  </p>
-                  <p className="mt-7 font-bold">{t.name}</p>
-                  <p className="text-sm text-slate-500">{t.role}</p>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        <TestimonialsCarousel testimonials={testimonials} settings={settings} />
         <section
           id="contact"
           className="max-w-5xl mx-auto px-6 py-28 text-center"
         >
           <motion.div
-            className="rounded-[2rem] p-10 md:p-16 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600"
+            className="contact-cta-card rounded-[2rem] p-10 md:p-16 bg-gradient-to-br from-indigo-600 via-purple-600 to-fuchsia-600"
             initial={{ opacity: 0, y: 28, scale: .98 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.3 }}
@@ -306,12 +304,19 @@ export default function Home() {
             <p className="mt-5 text-indigo-100 text-lg">
               {settings.contactDescription}
             </p>
-            <a
-              href={"mailto:" + profile.email}
-              className="inline-block mt-8 px-7 py-4 rounded-xl bg-white text-slate-950 font-bold hover:scale-105 transition"
-            >
-              {settings.contactCta} →
-            </a>
+            <div className="contact-cta-actions">
+              <a
+                href={whatsappLink}
+                target="_blank"
+                rel="noreferrer"
+                className="contact-whatsapp-button"
+              >
+                <span className="contact-whatsapp-icon" aria-hidden="true"><MessageCircle size={20} /></span>
+                Connect on WhatsApp
+                <ArrowRight size={17} aria-hidden="true" />
+              </a>
+
+            </div>
           </motion.div>
         </section>
       </main>

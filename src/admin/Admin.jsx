@@ -15,8 +15,10 @@ import {
 import { useCollection } from "../hooks/useCollection";
 import {
   defaultAbout,
+  defaultExperience,
   defaultProfile,
   defaultProjects,
+  defaultTestimonials,
   defaultSettings,
 } from "../data/defaultData";
 
@@ -183,6 +185,7 @@ function HomepageEditor({ settings, setSettings, onSave, saving, notice }) {
     ["experienceTitle", "Experience heading"],
     ["testimonialsEyebrow", "Testimonials eyebrow"],
     ["testimonialsTitle", "Testimonials heading"],
+    ["testimonialsDescription", "Testimonials description", true],
     ["contactEyebrow", "Contact section eyebrow"],
     ["contactTitle", "Contact heading"],
     ["contactDescription", "Contact description", true],
@@ -406,6 +409,32 @@ function CollectionEditor({ type, title }) {
     }
   }
 
+  async function publishStarterExperience() {
+    setSeeding(true);
+    setNotice("");
+    try {
+      await Promise.all(defaultExperience.map((entry) => createItem("experience", entry)));
+      setNotice("Starter experience entries added. You can now edit each entry here.");
+    } catch (error) {
+      setNotice(explainFirebaseError(error, "Could not add the starter experience entries."));
+    } finally {
+      setSeeding(false);
+    }
+  }
+
+  async function publishStarterTestimonials() {
+    setSeeding(true);
+    setNotice("");
+    try {
+      await Promise.all(defaultTestimonials.map((testimonial) => createItem("testimonials", testimonial)));
+      setNotice("Starter testimonials added. You can edit or remove them here.");
+    } catch (error) {
+      setNotice(explainFirebaseError(error, "Could not add the starter testimonials."));
+    } finally {
+      setSeeding(false);
+    }
+  }
+
   return (
     <section>
       <div className="admin-section-heading">
@@ -439,6 +468,18 @@ function CollectionEditor({ type, title }) {
           <div className="admin-panel mb-4 flex flex-col items-start justify-between gap-4 rounded-2xl p-5 sm:flex-row sm:items-center">
             <p className="max-w-xl text-sm leading-6 text-slate-400">The public site is showing your three starter project cards. Add them to Firestore to edit or remove them here.</p>
             <button type="button" disabled={seeding} onClick={publishStarterProjects} className="admin-secondary-button shrink-0 disabled:opacity-60">{seeding ? "Adding projects…" : "Add starter projects to CMS"}</button>
+          </div>
+        )}
+        {type === "experience" && !loading && !error && !data.length && (
+          <div className="admin-panel mb-4 flex flex-col items-start justify-between gap-4 rounded-2xl p-5 sm:flex-row sm:items-center">
+            <p className="max-w-xl text-sm leading-6 text-slate-400">The public site is showing starter experience entries. Add them to Firestore to edit or remove them here.</p>
+            <button type="button" disabled={seeding} onClick={publishStarterExperience} className="admin-secondary-button shrink-0 disabled:opacity-60">{seeding ? "Adding entries…" : "Add starter experience to CMS"}</button>
+          </div>
+        )}
+        {type === "testimonials" && !loading && !error && !data.length && (
+          <div className="admin-panel mb-4 flex flex-col items-start justify-between gap-4 rounded-2xl p-5 sm:flex-row sm:items-center">
+            <p className="max-w-xl text-sm leading-6 text-slate-400">The public site is showing four starter feedback summaries. Add them to Firestore to edit or remove them here.</p>
+            <button type="button" disabled={seeding} onClick={publishStarterTestimonials} className="admin-secondary-button shrink-0 disabled:opacity-60">{seeding ? "Adding testimonials…" : "Add starter testimonials to CMS"}</button>
           </div>
         )}
         {loading && <p className="text-sm text-slate-400">Loading {title.toLowerCase()}…</p>}
