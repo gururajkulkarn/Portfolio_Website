@@ -17,10 +17,6 @@ jobs:
       - run: npm ci
 
       - run: npm run build
-      run: |
-    test -n "$VITE_FIREBASE_API_KEY" && echo "API KEY: SET" || echo "API KEY: MISSING"
-    test -n "$VITE_FIREBASE_AUTH_DOMAIN" && echo "AUTH DOMAIN: SET" || echo "AUTH DOMAIN: MISSING"
-    test -n "$VITE_FIREBASE_PROJECT_ID" && echo "PROJECT ID: SET" || echo "PROJECT ID: MISSING"
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
