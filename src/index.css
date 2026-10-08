@@ -1431,6 +1431,11 @@ section[id] {
   .hero-contact-links { gap: .65rem; }
   .hero-contact-link { min-width: min(100%, 21.5rem); width: 100%; }
   .hero-contact-copy strong { font-size: .8rem; }
+  .hero-title-letter { opacity: 1 !important; }
+  .hero-copy h1 .text-gradient {
+    animation: none;
+    background-position: 50% 50%;
+  }
 }
 
 .about-section {

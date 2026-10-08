@@ -65,7 +65,7 @@ export default function Hero({ profile, settings }) {
                 {Array.from(roleTitle).map((letter, index) => (
                   <motion.span
                     key={`${letter}-${index}`}
-                    className={letter === " " ? "inline-block w-[.28em]" : "inline-block"}
+                    className={`hero-title-letter ${letter === " " ? "inline-block w-[.28em]" : "inline-block"}`}
                     initial={{ opacity: prefersReducedMotion ? 1 : 0 }}
                     animate={{ opacity: 1 }}
                     transition={{
