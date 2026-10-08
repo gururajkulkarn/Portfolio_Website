@@ -2828,6 +2828,22 @@ footer::before {
 .skills-flow-orb-one { top: -9rem; right: 14%; box-shadow: 0 0 0 1.5rem rgba(99,102,241,.018), 0 0 0 3rem rgba(99,102,241,.012); }
 .skills-flow-orb-two { bottom: -10rem; left: 38%; border-color: rgba(34,211,238,.07); }
 
+@media (max-width: 640px) {
+  .skills-flow-heading {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .skills-flow-live { align-self: center; }
+  .skills-flow-track { width: 100%; margin-inline: auto; }
+  .skills-flow-item { align-items: center; }
+  .skills-flow-node { width: min(100%, 32rem); }
+  .skills-flow-connector { margin-inline: auto; }
+  .skills-flow-live i,
+  .skills-flow-connector i { animation: none; opacity: .9; }
+}
+
 /* =========================================================
    LIGHT THEME
    The dark palette remains the default; the navbar toggle adds
