@@ -1437,24 +1437,57 @@ section[id] {
     background-position: 50% 50%;
   }
 
-  /* Keep ambient backgrounds steady on phones to prevent visual flicker. */
-  #root::before,
-  #root::after,
-  .home-hero .orb,
-  .hero-codefield::before,
-  .hero-codefield::after,
-  .circuit-lines path,
-  .circuit-lines circle,
-  .code-fragment,
-  .hero-ring,
-  .hero-3d-particle,
-  .hero-tech-chip {
-    animation: none !important;
-    will-change: auto;
+  /* Keep background motion on phones, but remove opacity flicker. */
+  #root::before {
+    opacity: .42;
+    animation: mobileAmbientDrift 32s ease-in-out infinite alternate;
   }
+  .home-hero .orb { animation: orbFloat 9s ease-in-out infinite; }
+  .circuit-lines circle {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: mobileNodeGlow 2.8s ease-in-out infinite alternate;
+  }
+  .code-fragment {
+    opacity: .64;
+    animation: mobileCodeDrift 8s ease-in-out infinite;
+  }
+  .hero-3d-particle {
+    opacity: .7;
+    animation: mobileParticleDrift 5.5s ease-in-out infinite alternate;
+  }
+  .skills-flow-live i { animation: mobileSkillsPulse 1.8s ease-in-out infinite; }
+  .skills-flow-connector i { animation-name: mobileSkillsTravel; }
+}
 
-  .hero-codefield::before,
-  .hero-codefield::after { display: none; }
+@keyframes mobileAmbientDrift {
+  from { background-position: 0% 0%; }
+  to { background-position: 100% 100%; }
+}
+
+@keyframes mobileNodeGlow {
+  from { transform: scale(.9); filter: drop-shadow(0 0 3px rgba(129,140,248,.45)); }
+  to { transform: scale(1.12); filter: drop-shadow(0 0 8px rgba(129,140,248,.9)); }
+}
+
+@keyframes mobileCodeDrift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes mobileParticleDrift {
+  from { transform: translate3d(0, 8px, 0) scale(.8); }
+  to { transform: translate3d(8px, -11px, 0) scale(1.12); }
+}
+
+@keyframes mobileSkillsPulse {
+  0%, 100% { transform: scale(.9); }
+  50% { transform: scale(1.12); }
+}
+
+@keyframes mobileSkillsTravel {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(.68rem); opacity: 1; }
 }
 
 .about-section {
@@ -2864,8 +2897,8 @@ footer::before {
   .skills-flow-item { align-items: center; }
   .skills-flow-node { width: min(100%, 32rem); }
   .skills-flow-connector { margin-inline: auto; }
-  .skills-flow-live i,
-  .skills-flow-connector i { animation: none; opacity: .9; }
+  .skills-flow-live i { animation: mobileSkillsPulse 1.8s ease-in-out infinite; }
+  .skills-flow-connector i { animation-name: mobileSkillsTravel; }
 }
 
 /* =========================================================
@@ -3163,6 +3196,14 @@ html[data-theme="light"] .admin-skill-chip { color: #334155; border-color: rgba(
 }
 
 @media (max-width: 640px) {
-  .hero-tech-chip { display: none; }
   .hero-3d-particles { inset: -1.25rem; opacity: .62; }
+  .hero-tech-chip {
+    display: inline-flex;
+    min-height: 2.2rem;
+    padding: .42rem .58rem;
+    font-size: .68rem;
+  }
+  .hero-tech-chip-react { left: -.35rem; }
+  .hero-tech-chip-api { right: -.35rem; }
+  .hero-tech-chip-flow { left: .35rem; }
 }
